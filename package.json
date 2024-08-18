@@ -1,12 +1,12 @@
 {
-  "name": "reactnativelinechart",
-  "widgetName": "ReactNativeLineChart",
+  "name": "nativelinechart",
+  "widgetName": "NativeLineChart",
   "version": "1.0.0",
   "description": "My widget description",
   "copyright": "2020 Mendix Technology BV",
   "author": "Aseel",
   "config": {
-    "projectPath": "../../"
+    "projectPath": "./"
   },
   "packagePath": "mendix",
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/Aseel/reactnativelinechart/issues"
+    "url": "https://github.com/Aseel-Dweedar/mx-native-line-chart"
   },
   "devDependencies": {
     "@mendix/pluggable-widgets-tools": "^10.12.1"

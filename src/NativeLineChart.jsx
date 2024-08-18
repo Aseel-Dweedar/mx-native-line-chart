@@ -1,7 +1,7 @@
 import { createElement } from "react";
 import LineChartComponent from "./components/LineChartComponent";
 
-export function ReactNativeLineChart(props) {
+export function NativeLineChart(props) {
 
     return <LineChartComponent {...props} />;
 

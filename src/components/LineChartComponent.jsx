@@ -96,6 +96,7 @@ export default function LineChartComponent({
 }) {
     const [dataSource, setDataSource] = useState(null);
     const [chartConfig, setChartConfig] = useState(null);
+    const [isEmpty, setIsEmpty] = useState(true);
     const [currClickedDot, setCurrClickedDot] = useState(null);
     const [minValue, setMinValue] = useState(0);
 
@@ -185,8 +186,17 @@ export default function LineChartComponent({
 
     useEffect(() => {
         // Setting the chart data and config
-        if (labelsDataSource?.status === "available" && dataSeries[0].datasetSource?.status === "available") {
+        let isReady = true;
+        dataSeries.forEach(dataset => {
+            if (dataset.datasetSource.status !== "available") {
+                isReady = false;
+                return;
+            }
+        });
+
+        if (labelsDataSource?.status === "available" && isReady) {
             let minValueToSet = Number.MAX_SAFE_INTEGER;
+            let emptyChart = false;
             let data = {
                 labels: labelsDataSource.items.map(item => xLabel.get(item).displayValue),
                 datasets: dataSeries.map(dataset => {
@@ -203,6 +213,9 @@ export default function LineChartComponent({
                         onClickDot.push(dataset.dataPointClick?.get(item));
                         widgetContent.push(dataset.decoratorContent ? dataset.decoratorContent.get(item) : null);
                     });
+                    if (data.length === 0) {
+                        emptyChart = true
+                    }
                     return {
                         data: [...data],
                         color: (opacity = 1) => dataset.lineColor?.value,
@@ -259,14 +272,23 @@ export default function LineChartComponent({
                     strokeWidth: dashedLinesWidth
                 }
             };
+            setIsEmpty(emptyChart);
             setMinValue(minValueToSet);
             setDataSource(data);
             setChartConfig(config);
         }
+
+        return () => {
+            setCurrClickedDot(null);
+        };
     }, [dataSeries, labelsDataSource]);
 
-    if (!dataSource?.labels?.length || !chartConfig) {
-        return <View></View>;
+    if (isEmpty || !chartConfig) {
+        return (
+            <View>
+                <Text>Empty Chart</Text>
+            </View>
+        );
     } else {
         return (
             <LineChart
@@ -280,7 +302,7 @@ export default function LineChartComponent({
                 height={validateNumericsValue(chartHeight, 0, 2000)}
                 withDots={withDots}
                 withShadow={withShadow}
-                bezier={bezier}
+                bezier={bezier === "curvy"}
                 withInnerLines={withInnerLines}
                 withOuterLines={withOuterLines}
                 withHorizontalLines={withHorizontalLines}
@@ -314,6 +336,7 @@ export default function LineChartComponent({
                 formatYLabel={y => `${yAxisFormatter(y)}`}
                 style={{
                     borderRadius: validateNumericsValue(chartRadius, 0, 1000)
+                    // paddingHorizontal:20,
                 }}
             />
         );

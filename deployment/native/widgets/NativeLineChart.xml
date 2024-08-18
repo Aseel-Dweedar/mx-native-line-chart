@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget
+    id="mendix.nativelinechart.NativeLineChart"
+    pluginWidget="true"
+    needsEntityContext="true"
+    offlineCapable="true"
+    supportedPlatform="Native"
+    xmlns="http://www.mendix.com/widget/1.0/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd"
+>
+    <name>Native Line Chart</name>
+    <description>My widget description</description>
+    <icon>PHN2ZyBjbGFzcz0ic3ZnLWljb24iIHN0eWxlPSJ3aWR0aDogMWVtOyBoZWlnaHQ6IDFlbTt2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlO2ZpbGw6IGN1cnJlbnRDb2xvcjtvdmVyZmxvdzogaGlkZGVuOyIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNDcuOTExIDg3Ni4wODl2LTgwMC45OTVoLTcyLjgxOHY4MDAuOTk1aC0wLjE4MnY3Mi44MThoODczLjgxM3YtNzIuODE4aC04MDAuODE0eiIgIC8+PHBhdGggZD0iTTYyMi4xMzcgNjU3LjI3MWwtMjA5LjA3OC0xODQuMDQ3LTEzOS41MzcgMTc1LjIxOC01Ni45OC00NS4zMjkgMTg3LjMyNC0yMzUuMTEgMjEwLjM1MiAxODUuMzIyIDI4Mi41MzMtMzM3Ljc4MyA1NS43OTYgNDYuNzg1LTMzMC40MTEgMzk0Ljk0NXoiICAvPjwvc3ZnPg==</icon>
+    <properties>
+        <propertyGroup caption="Data">
+            <property key="labelsDataSource" type="datasource" isList="true" required="true">
+                <caption>Lables Data Source</caption>
+                <description />
+            </property>
+            <property key="xLabel" type="attribute" dataSource="labelsDataSource" required="true">
+                <caption>X-axis Labels (String)</caption>
+                <description>Will iterate over the data source and set the labels sequentially</description>
+                <attributeTypes>
+                    <attributeType name="String" />
+                </attributeTypes>
+            </property>
+            <property key="dataSeries" type="object" isList="true">
+                <caption>Data Series</caption>
+                <description />
+                <properties>
+                    <propertyGroup caption="Dataset Item">
+                        <property key="datasetSource" type="datasource" isList="true" required="true">
+                            <caption>Dataset Source</caption>
+                            <description />
+                        </property>
+                        <property key="yAxisValue" type="attribute" dataSource="datasetSource" required="true">
+                            <caption>Y Values (Decimal)</caption>
+                            <description>Will iterate over the data source and set the data points</description>
+                            <attributeTypes>
+                                <attributeType name="Decimal" />
+                            </attributeTypes>
+                        </property>
+                        <property key="legend" type="textTemplate" required="true">
+                            <caption>Legend</caption>
+                            <description>To hide the legends, turn it of from the legends section</description>
+                        </property>
+                        <property key="lineColor" type="textTemplate" required="false">
+                            <caption>Line Color</caption>
+                            <description>Leave it empty if you wish to draw the chart without a line; otherwise, add a hex color, e.g., #eb4034.</description>
+                        </property>
+                        <property key="lineWidth" type="integer" defaultValue="2">
+                            <caption>Line Width</caption>
+                            <description />
+                        </property>
+                        <property key="dataPointClick" dataSource="datasetSource" type="action" required="false">
+                        	<caption>onClick Dot</caption>
+                            <description>Callback fired when clicking a data Point</description>
+                        </property>
+                        <property key="decoratorContent" type="widgets" dataSource="datasetSource" required="false">
+                            <caption>On Click Data Point Element</caption>
+                            <description />
+                        </property>
+                    </propertyGroup>
+                </properties>
+            </property>
+        </propertyGroup>
+        <propertyGroup caption="Configuration">
+            <propertyGroup caption="Chart Setting">
+                <property key="bezier" type="enumeration" defaultValue="curvy">
+                <caption>Interpolation</caption>
+                <description />
+                <enumerationValues>
+                    <enumerationValue key="curvy">Curved</enumerationValue>
+                    <enumerationValue key="linear">Linear</enumerationValue>
+                </enumerationValues>
+                </property>
+            </propertyGroup>
+            <propertyGroup caption="Y-Axis Configuration">
+                <property key="yAxisFormate" type="enumeration" defaultValue="defaultNumberFormatting">
+                    <caption>Y-axis Formatte</caption>
+                    <description />
+                    <enumerationValues>
+                        <enumerationValue key="defaultNumberFormatting">Defualt Numbers Formatting, e.g., 15000, 2000, 173000</enumerationValue>
+                        <enumerationValue key="thousandsDividerFormatting">Thousands Divider Formatting, e.g., 15,000, 2,000, 173,000</enumerationValue>
+                        <enumerationValue key="internationalSystemFormatting">International System Formatting, e.g., 1K, 1M, 1B</enumerationValue>
+                        <enumerationValue key="thousandsKFormatter">Thousands K Formatting, e.g., 15K, 2K, 173K</enumerationValue>
+                        <enumerationValue key="millionsMFormatter">Millions M Formatting, e.g., 15M, 2M, 173M</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="decimalPlaces" type="integer" defaultValue="2">
+                    <caption>Y-axis Decimal Precision</caption>
+                    <description>Defaults to 2dp and max of 20dp</description>
+                </property>
+                <property key="segments" type="integer" defaultValue="4">
+                    <caption>Y-axis Segments</caption>
+                    <description>The amount of numeric divisions along the Y-axis, max of 100 segments</description>
+                </property>
+                <property key="fromZero" type="boolean" defaultValue="false">
+                    <caption>From Zero</caption>
+                    <description>Render charts from 0 not from the minimum value</description>
+                </property>
+                <property key="hidePointsAtIndex" type="textTemplate" required="false">
+                    <caption>Hide Dots At Indexes</caption>
+                    <description>The indexes for the data points you want to hide, separated by acomma, e.g., 1,3,4</description>
+                </property>
+            </propertyGroup>
+            <propertyGroup caption="Chart UI">
+                <property key="chartWidth" type="enumeration" defaultValue="full">
+                    <caption>Chart Width</caption>
+                    <description />
+                    <enumerationValues>
+                        <enumerationValue key="full">Full width</enumerationValue>
+                        <enumerationValue key="custom">Custom width</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="customWidth" type="integer" defaultValue="300">
+                    <caption>Chart Custom width</caption>
+                    <description />
+                </property>
+                <property key="chartHeight" type="integer" defaultValue="250">
+                    <caption>Chart Height</caption>
+                    <description>Maximum height is 2000</description>
+                </property>
+                <property key="chartRadius" type="integer" defaultValue="8">
+                    <caption>Chart border Radius</caption>
+                    <description />
+                </property>
+            </propertyGroup>
+        </propertyGroup>
+        <propertyGroup caption="Labels">
+            <propertyGroup caption="Y Labels">
+                <property key="withHorizontalLabels" type="boolean" defaultValue="true">
+                    <caption>With Y Labels</caption>
+                    <description />
+                </property>
+                <property key="yLabelsColor" type="string" required="false" defaultValue="#808080">
+                    <caption>Y Labels Color</caption>
+                    <description />
+                </property>
+                <property key="yLabelsFontSize" type="integer" defaultValue="12">
+                    <caption>Y Labels Font Size</caption>
+                    <description />
+                </property>
+                <property key="yLabelsFontWeight" type="enumeration" defaultValue="normal">
+                    <caption>Y Labels Font Weight</caption>
+                    <description />
+                    <enumerationValues>
+                        <enumerationValue key="normal">Normal</enumerationValue>
+                        <enumerationValue key="bold">Bold</enumerationValue>
+                        <enumerationValue key="lighter">Light</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="horizontalLabelRotation" type="integer" defaultValue="0">
+                    <caption>Y Labels Rotation</caption>
+                    <description />
+                </property>
+                <property key="yLabelsOffset" type="integer" defaultValue="0">
+                    <caption>Y Labels Offset</caption>
+                    <description />
+                </property>
+                <property key="yAxisLabel" type="string" required="false">
+                    <caption>Before Y Labels text</caption>
+                    <description/>
+                </property>
+                <property key="yAxisSuffix" type="string" required="false">
+                    <caption>After Y Labels text</caption>
+                    <description/>
+                </property>
+            </propertyGroup>
+            <propertyGroup caption="X Labels">
+                <property key="withVerticalLabels" type="boolean" defaultValue="true">
+                    <caption>With X Labels</caption>
+                    <description />
+                </property>
+                <property key="xLabelsColor" type="string" required="false" defaultValue="#808080">
+                    <caption>X Labels Color</caption>
+                    <description />
+                </property>
+                <property key="xLabelsFontSize" type="integer" defaultValue="12">
+                    <caption>X Labels Font Size</caption>
+                    <description />
+                </property>
+                <property key="xLabelsFontWeight" type="enumeration" defaultValue="normal">
+                    <caption>X Labels Font Weight</caption>
+                    <description />
+                    <enumerationValues>
+                        <enumerationValue key="normal">Normal</enumerationValue>
+                        <enumerationValue key="bold">Bold</enumerationValue>
+                        <enumerationValue key="lighter">Light</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="verticalLabelRotation" type="integer" defaultValue="0">
+                    <caption>X LabelS Rotation</caption>
+                    <description />
+                </property>
+                <property key="xLabelsOffset" type="integer" defaultValue="0">
+                    <caption>X LabelS Offset</caption>
+                    <description />
+                </property>
+                <property key="xAxisLabel" type="string" required="false">
+                    <caption>After x Labels text</caption>
+                    <description/>
+                </property>
+            </propertyGroup>
+        </propertyGroup>
+        <propertyGroup caption="Backgrounds">
+            <propertyGroup caption="Chart Background">
+                <property key="backgroundGradientFrom" type="string" required="false" defaultValue="#000000">
+                    <caption>Gradient First Color</caption>
+                    <description />
+                </property>
+                <property key="backgroundGradientTo" type="string" required="false" defaultValue="#000000">
+                    <caption>Gradient Seconde Color</caption>
+                    <description />
+                </property>
+                <property key="backgroundGradientFromOpacity" type="decimal" defaultValue="1">
+                    <caption>First Color Opacity</caption>
+                    <description>First color opacity (0-1) of a chart's background</description>
+                </property>
+                <property key="backgroundGradientToOpacity" type="decimal" defaultValue="1">
+                    <caption>Seconde Color Opacity</caption>
+                    <description>Seconde color opacity (0-1) of a chart's background</description>
+                </property>
+            </propertyGroup>
+            <propertyGroup caption="Under Data Background">
+                <property key="withShadow" type="boolean" defaultValue="true">
+                    <caption>Under Data Background</caption>
+                    <description />
+                </property>
+                <property key="fillShadowGradientFrom" type="string" required="false" defaultValue="#d8d8d8">
+                    <caption>Gradient First Color</caption>
+                    <description>First color of the area under data</description>
+                </property>
+                <property key="fillShadowGradientTo" type="string" required="false" defaultValue="#000000">
+                    <caption>Gradient seconde Color</caption>
+                    <description>Seconde color of the area under data</description>
+                </property>
+                <property key="fillShadowGradientFromOpacity" type="decimal" defaultValue="0.4">
+                    <caption>First Color Opacity</caption>
+                    <description>First color opacity (0-1) of the area under data</description>
+                </property>
+                <property key="fillShadowGradientToOpacity" type="decimal" defaultValue="0">
+                    <caption>Seconde Color Opacity</caption>
+                    <description>Seconde color opacity (0-1) of the area under data</description>
+                </property>
+                <property key="fillShadowGradientFromOffset" type="decimal" defaultValue="0">
+                    <caption>First Color Offset</caption>
+                    <description>First color offset (0-1) of the area under data</description>
+                </property>
+                <property key="fillShadowGradientToOffset" type="decimal" defaultValue="0.8">
+                    <caption>Seconde Color Offset</caption>
+                    <description>Seconde color offset (0-1) of the area under data</description>
+                </property>
+            </propertyGroup>
+        </propertyGroup>
+        <propertyGroup caption="Lines">
+            <property key="withInnerLines" type="boolean" defaultValue="true">
+                <caption>Inner Dashed Lines</caption>
+                <description />
+            </property>
+            <property key="withOuterLines" type="boolean" defaultValue="true">
+                <caption>Axises Dashed Lines</caption>
+                <description />
+            </property>
+            <property key="withVerticalLines" type="boolean" defaultValue="true">
+                <caption>Vertical Dashed Lines</caption>
+                <description />
+            </property>
+            <property key="withHorizontalLines" type="boolean" defaultValue="true">
+                <caption>Horizontal Dashed Lines</caption>
+                <description />
+            </property>
+            <property key="dashedLinesColor" type="string" required="false" defaultValue='#808080'>
+                <caption>Dashed Lines Color</caption>
+                <description />
+            </property>
+            <property key="dashedLinesWidth" type="integer" defaultValue="1">
+                <caption>Dashed Lines Width</caption>
+                <description />
+            </property>
+        </propertyGroup>
+        <propertyGroup caption="Dots">
+            <property key="withDots" type="boolean" defaultValue="true">
+                <caption>With Dots</caption>
+                <description />
+            </property>
+            <property key="dotsRadius" type="integer" defaultValue="4">
+                <caption>Dots Radius</caption>
+                <description />
+            </property>
+            <property key="dotsColor" type="string" required="false" defaultValue="#808080">
+                <caption>Dots Color</caption>
+                <description />
+            </property>
+            <property key="dotsStrokeWidth" type="integer" defaultValue="0">
+                <caption>Dots Stroke Width</caption>
+                <description />
+            </property>
+            <property key="dotsStrokeColor" type="string" defaultValue="#808080" required="false">
+                <caption>Dots Stroke Color</caption>
+                <description />
+            </property>
+            <property key="renderDecoratorOnDotClick" type="boolean" defaultValue="true">
+                <caption>Element On Dot Click</caption>
+                <description>Render extra elements on dot cick, such as data point info or additional markup</description>
+            </property>
+            <property key="decoratorXOffset" type="integer" defaultValue="0">
+                <caption>Element X Offset</caption>
+                <description>The amount of element offset from the dot towards on X-axis</description>
+            </property>
+            <property key="decoratorYOffset" type="integer" defaultValue="0">
+                <caption>Element Y Offset</caption>
+                <description>The amount of element offset from the dot towards on Y-axis</description>
+            </property>
+            <property key="decoratorMinHeight" type="integer" defaultValue="25">
+                <caption>Element Min Height</caption>
+                <description/>
+            </property>
+            <property key="renderDotContent" type="boolean" defaultValue="true">
+                <caption>With Dot Content</caption>
+                <description>Render the data point value above the dot</description>
+            </property>
+            <property key="dotContentColor" type="string" required="false" defaultValue="#808080">
+                <caption>Dots Content Color</caption>
+                <description />
+            </property>
+            <property key="dotContentXOffset" type="integer" defaultValue="0">
+                <caption>Dot Content X Offset</caption>
+                <description />
+            </property>
+            <property key="dotContentYOffset" type="integer" defaultValue="-10">
+                <caption>Dot Content Y Offset</caption>
+                <description />
+            </property>
+        </propertyGroup>
+        <propertyGroup caption="Legends">
+            <property key="withLegends" type="boolean" defaultValue="true">
+                <caption>with Legends</caption>
+                <description />
+            </property>
+            <property key="legendsColor" type="string" required="false" defaultValue="#808080">
+                <caption>Legends Color</caption>
+                <description />
+            </property>
+            <property key="legendsFontSize" type="integer" defaultValue="12">
+                <caption>legends Font Size</caption>
+                <description />
+            </property>
+            <property key="legendsFontWeight" type="enumeration" defaultValue="normal">
+                <caption>legends Font Weight</caption>
+                <description />
+                <enumerationValues>
+                    <enumerationValue key="normal">Normal</enumerationValue>
+                    <enumerationValue key="bold">Bold</enumerationValue>
+                    <enumerationValue key="lighter">Light</enumerationValue>
+                </enumerationValues>
+            </property>
+        </propertyGroup>
+    </properties>
+</widget>
